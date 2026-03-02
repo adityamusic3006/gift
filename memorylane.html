@@ -2006,6 +2006,8 @@
 }
 </style>
 
+
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const gallery = document.getElementById("memoryGallery");
@@ -2018,82 +2020,59 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // New cards to unlock
   const newCardsData = [
-
-  
-    
     {type:"img", src:"11.jpg", caption:"cuties 😍", sticker:"❤️"},
-  {type:"img", src:"12.jpg", caption:"naughty😂", sticker:"✨"},
-  {type:"img", src:"13.jpg", caption:"best  😎", sticker:"🎉"},
-  {type:"img", src:"14.jpg", caption:"lovely 🥰", sticker:"💖"},
-  {type:"img", src:"15.jpg", caption:"😇", sticker:"🌸"},
-  {type:"img", src:"16.jpg", caption:"heart ❤️", sticker:"🥰"},
-  {type:"video", src:"Snapchat-152370459.mp4", caption:"masti 😜", sticker:"💝"},
-  {type:"video", src:"Snapchat-1110419278.mp4", caption:"reaction 😍", sticker:"💕"},
-  {type:"img", src:"19.jpg", caption:"all with you🥳", sticker:"🎶"},
-  {type:"video", src:"Snapchat-2010466948.mp4", caption:" i love you 😘", sticker:"🌟"},
+    {type:"img", src:"12.jpg", caption:"naughty😂", sticker:"✨"},
+    {type:"img", src:"13.jpg", caption:"best  😎", sticker:"🎉"},
+    {type:"img", src:"14.jpg", caption:"lovely 🥰", sticker:"💖"},
+    {type:"img", src:"15.jpg", caption:"😇", sticker:"🌸"},
+    {type:"img", src:"16.jpg", caption:"heart ❤️", sticker:"🥰"},
+    {type:"video", src:"Snapchat-152370459.mp4", caption:"masti 😜", sticker:"💝"},
+    {type:"video", src:"Snapchat-1110419278.mp4", caption:"reaction 😍", sticker:"💕"},
+    {type:"img", src:"19.jpg", caption:"all with you🥳", sticker:"🎶"},
+    {type:"video", src:"Snapchat-2010466948.mp4", caption:" i love you 😘", sticker:"🌟"},
   ];
 
-  // Click on special card → open modal
+  // Open modal
   unlockCard.addEventListener("click", function() {
     modal.style.display = "flex";
     answerInput.value = "";
     errorMsg.style.display = "none";
   });
 
-//for drive link
-function getDriveViewLink(url) {
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : url;
-}
-
-// Example usage
-const imgLink = getDriveViewLink("https://drive.google.com/file/d/1A2B3C4D5E/view?usp=sharing");
-
-const imgHTML = `<img src="${imgLink}" alt="Memory" class="memory-img" />`;
-document.getElementById("memory-container").innerHTML = imgHTML;
-
-
-
-
-
-
-
   // Close modal
   closeBtn.addEventListener("click", () => modal.style.display = "none");
 
   // Unlock hidden cards on correct answer
   unlockBtn.addEventListener("click", () => {
-   const answer = answerInput.value.trim(); // lowerCase remove because password is numeric
-
-    // Generate today's password (Option 4)
+    const answer = answerInput.value.trim();
     const today = new Date();
-    const currentDate = today.getDate(); // 1-31
-    const password = 26 + currentDate; // Option 4 logic
+    const password = 26 + today.getDate();
 
-    if(parseInt(answer) === password) { // compare numeric
+    if(parseInt(answer) === password) {
+      // Remove old special card
+      unlockCard.remove();
+
       newCardsData.forEach(data => {
         const card = document.createElement("div");
         card.className = "memory-card visible";
-        card.style.cssText = `--rotate:${Math.random()*6-3}deg; animation-delay:0.5s;`;
+        card.style.cssText = `--rotate:${Math.random()*6-3}deg; animation-delay:0.5s; position:relative; margin:10px;`;
 
-        // Video or image
         let mediaHTML = "";
         if(data.type === "video") {
           mediaHTML = `
-            <video class="memory-img" autoplay loop muted playsinline>
+            <video class="memory-img" autoplay loop muted playsinline width="300">
               <source src="${data.src}" type="video/mp4">
-              Your browser does not support the video tag.
             </video>
           `;
         } else {
-          mediaHTML = `<img class="memory-img" src="${data.src}" alt="${data.caption}" />`;
+          mediaHTML = `<img class="memory-img" src="${data.src}" alt="${data.caption}" width="300"/>`;
         }
 
         card.innerHTML = `
           <div class="card-tape" style="--rotate:${Math.random()*6-3}deg"></div>
           ${mediaHTML}
           <div class="memory-caption">${data.caption}</div>
-          <div class="card-sticker" style="position:absolute; left:0;">
+          <div class="card-sticker" style="position:absolute; left:0; top:0;">
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
               <circle cx="50" cy="50" r="50" fill="#ff6ec4"></circle>
               <text x="50" y="65" font-family="Arial" font-size="40" text-anchor="middle" fill="white">
@@ -2104,6 +2083,7 @@ document.getElementById("memory-container").innerHTML = imgHTML;
         `;
         gallery.appendChild(card);
       });
+
       modal.style.display = "none";
     } else {
       errorMsg.style.display = "block";
@@ -2212,7 +2192,7 @@ input[type=range]::-webkit-slider-thumb{
 </style>
 
 <script>
-const songs = ["tu mori duniya .mp3","perfect.mp3","iktara.mp3","Mu Tumara.mp3"];
+const songs = ["tu mori duniya.mp3","perfect.mp3","iktara.mp3","Mu Tumara.mp3"];
 let currentSongIndex = Math.floor(Math.random()*songs.length);
 
 const music = document.getElementById("bgMusic");
